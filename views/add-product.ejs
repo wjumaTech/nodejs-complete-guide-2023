@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/css/styles.css">
-    <title>Eccomerce</title>
-  </head>
-  <body>
+<%- include('includes/head') %>
 
     <header class="header">
       <div class="container">
@@ -19,14 +11,14 @@
 
     <main class="container">
       <h1 class="mt-5">Add products</h1>
-      <form action="/admin/products" method="post">
-        <div style="display: inline;">
-          <label for="title">Title</label>
-          <input type="text" id="title" name="title">
+      <form class="formulario" action="/admin/products" method="post">
+        <div class="formulario__grupo">
+          <label class="formulario__label" for="title">Title</label>
+          <input class="formulario__control" type="text" id="title" name="title">
         </div>
         <button type="submit">Add product</button>
       </form>
     </main>
   </body>
 
-</html>
+<%- include('includes/footer') %>

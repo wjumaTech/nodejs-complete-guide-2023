@@ -17,19 +17,23 @@ app.use(bodyParser.json());
 // Static files
 app.use(express.static(path.join(__dirname, 'public')))
 
+// Engine template
+app.set('views', path.join(__dirname, 'views'))
+app.set('view engine', 'ejs');
+
 // Use routes
 app.use('/admin', adminRoute);
 app.use('/', shopRoute);
 app.use((req, res, next) => {
   res
     .status(404)
-    .sendFile(path.join(__dirname, 'views', 'page404.html'))
+    .render('page404')
 });
 
 // Listen and database
 mongoose.connect('mongodb://127.0.0.1:27017/eccomerce')
-  .then((client) => {
-    console.log(client.connections)
+  .then(() => {
+    console.log(`Database connected!`)
     app.listen(
       port,
       console.log(`Server running on port ${port}`)
