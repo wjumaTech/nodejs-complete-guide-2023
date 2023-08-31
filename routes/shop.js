@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.render('shop');
-})
+const shopController = require('../controllers/shop');
+
+router.get('/', shopController.getIndex);
+
+router.post('/cart', shopController.postCart);
 
 module.exports = router;

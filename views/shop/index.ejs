@@ -1,0 +1,52 @@
+<%- include('../includes/head') %>
+
+    <%- include('../includes/navigate') %>
+
+    <main>
+
+      
+      <section class="container my-5">
+    
+        <header>
+          <h3>My products</h3>
+          <p>List of all the products</p>
+        </header>
+     
+        <% if(products.length > 0) { %>
+          <div class="row">
+          <% for( product of products )  {%>
+              <div class="col-3">
+                <div class="card">
+                  <img src="<%= product.imageUrl%>" class="card-img-top" alt="">
+                  <div class="card-body">
+                    <h3 class="card-title"><%= product.title.slice(0,50)%> <span class="fw-lighter">...</span> </h3>
+                    <p class="card-text"><%= product.description.slice(0,160)%> <span class="fw-lighter">...</span></p>
+                    <div class="d-flex align-items-center">
+                      <div class="col-3 justify-content-center d-flex">
+                        <span class="badge text-bg-light" style="font-size: 1rem;">$<%= product.price%></span>
+                      </div>
+                      <div class="col-9 justify-content-center d-flex">
+                        <form class="d-grid gap-2" action="/cart" method="post">
+                          <input type="hidden" name="productId" value="<%= product._id %>">
+                          <button type="submit" class="btn btn-primary ">
+                            <i class="bi bi-cart2"></i> 
+                            Add to cart
+                          </button>
+                        </form> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% }else { %>
+          <h3 style="margin-top: 3rem;">Products not found!</h3>
+        <% } %>
+
+      </section>
+      
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>
