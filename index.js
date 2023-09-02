@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 
 // Pointing user to request
 app.use((req, res, next) => {
-  User.findById("64f0afe5ea3bfbab8adcb467")
+  User.findById("64f0e27342673e7e634b4667")
     .then((user) => {
       req.user = user;
       next();

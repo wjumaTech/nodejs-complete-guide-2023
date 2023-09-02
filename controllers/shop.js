@@ -15,10 +15,35 @@ exports.getIndex = (req, res, next) => {
     })
 }
 
+exports.getCart = async (req, res) => {
+
+  /**
+   * In this case we use async/await becouse mongoose migrated populate
+   * to this new paradig.
+   */
+  const cartUserProducts = await req.user.populate('cart.items.productId');
+  const products =  await cartUserProducts.cart.items;
+
+  res.render('shop/cart', {
+    path: '/cart',
+    pageTitle: 'Cart',
+    products
+  });
+
+}
+
 exports.postCart = (req, res, next) => {
 
-  // Get product id
   const prodId = req.body.productId;
 
-  // Add to cart
+  // Get Find product for add to cart
+  Product.findById(prodId)
+    .then((product) => {
+      return req.user.addToCart(product);
+    })
+    .then((result) => {
+      console.log('Se ha agregado un producto al carrito de compras')
+      res.redirect('/cart')
+    })
+    .catch((err) => console.log(err))
 }
