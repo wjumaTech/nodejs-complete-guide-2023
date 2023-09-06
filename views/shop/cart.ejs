@@ -14,7 +14,7 @@
 
         <article>
 
-          <% if( products.length >= 0 ) { %>
+          <% if( products.length > 0 ) { %>
 
             <% for( product of products ) { %>
               <ol class="list-group">
@@ -23,15 +23,20 @@
                     <div class="fw-bold"><%= product.productId.title %></div>
                     Quantity: <%= product.quantity %>
                   </div>
-                  <span class="badge bg-primary rounded-pill">
-                    <i class="bi bi-trash3"></i>
-                  </span>
+                  <form action="/cart-delete-item" method="post">
+                    <input type="hidden" name="productId" id="productId" value="<%= product.productId._id%>">
+                    <button type="submit" class="badge border-0 bg-danger rounded-pill">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </form>
                 </li>
               </ol>
             <% } %>
-            <button class="btn btn-primary mt-4">Order now!</button>
+            <form action="/create-order" method="post">
+              <button type="submit" class="btn btn-primary mt-4">Order now!</button>
+            </form>
           <% } else { %>
-            <p>Not product in the cart</p>
+            <h3>There are not product in the cart</h3>
           <% } %>
         </article>
 

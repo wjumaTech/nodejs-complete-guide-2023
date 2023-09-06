@@ -37,7 +37,6 @@ userSchema.methods.addToCart = function(product) {
     return cp.productId.toString() === product._id.toString();
   });
 
-  console.log(cartProductIndex)
 
   let newQuantity = 1;
   const updatedCartItems = [ ...this.cart.items ];
@@ -61,7 +60,28 @@ userSchema.methods.addToCart = function(product) {
 
 }
 
+userSchema.methods.deleteItemFromCart = function(prodId) {
 
+  /**
+   * Para eliminar un articulo de la lista en el carro de compras, primero identificamos el articulo 
+   * realizando una busqueda en el carrito del usuario y devolvemos un nuevo arreglo con los articulos
+   * omitiendo este ultimo, asi queda eliminado de la lista del carrito de comparas.
+   */
+  const UPDATED_CART_ITEMS = this.cart.items.filter( items => {
+    return items.productId._id.toString() !== prodId.toString();
+  });
+
+  this.cart.items = UPDATED_CART_ITEMS;
+
+  return this.save();
+}
+
+userSchema.methods.clearCart = function() {
+  this.cart = {
+    items: []
+  }
+  return this.save();
+}
 
 module.exports = mongoose.model('User', userSchema);
 
