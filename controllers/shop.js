@@ -9,7 +9,7 @@ exports.getIndex = (req, res, next) => {
         path: '/',
         pageTitle: 'Shop',
         products,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -23,14 +23,14 @@ exports.getCart = async (req, res) => {
    * In this case we use async/await becouse mongoose migrated populate
    * to this new paradig.
    */
-  const cartUserProducts = await req.user.populate('cart.items.productId');
+  const cartUserProducts = await req.session.user.populate('cart.items.productId');
   const products =  await cartUserProducts.cart.items;
 
   res.render('shop/cart', {
     path: '/cart',
     pageTitle: 'Cart',
     products,
-    isAuthenticated: req.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn
   });
 
 }
@@ -42,7 +42,7 @@ exports.postCart = (req, res, next) => {
   // Get Find product for add to cart
   Product.findById(prodId)
     .then((product) => {
-      return req.user.addToCart(product);
+      return req.session.user.addToCart(product);
     })
     .then((result) => {
       console.log('Se ha agregado un producto al carrito de compras')
@@ -53,7 +53,7 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res) => {
   const prodId = req.body.productId;
-  req.user.deleteItemFromCart(prodId)
+  req.session.user.deleteItemFromCart(prodId)
     .then(() => {
       console.log(`Product with ID: ${prodId} was deleted successfully!`);
       res.redirect('/cart')
@@ -61,19 +61,19 @@ exports.postCartDeleteProduct = (req, res) => {
 }
 
 exports.getOrders = (req, res) => {
-  Order.find({ 'user.userId': req.user._id })
+  Order.find({ 'user.userId': req.session.user._id })
     .then((orders) => {
       res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Orders',
         orders,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     });
 }
 
 exports.postOrder = async (req, res) => {
-  const user = await req.user.populate('cart.items.productId');
+  const user = await req.session.user.populate('cart.items.productId');
   const products =  await user.cart.items.map(i => {
 
     /**
@@ -94,7 +94,7 @@ exports.postOrder = async (req, res) => {
   })
   await order.save();
   console.log('Se ha creado una orden de compra.')
-  await req.user.clearCart();
+  await req.session.user.clearCart();
   console.log('Cache carrito borrada!.')
   res.redirect('/orders');
 }

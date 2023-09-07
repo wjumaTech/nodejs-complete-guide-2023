@@ -2,6 +2,15 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+
+const MONGODB_URI = 'mongodb://127.0.0.1:27017/avispa';
+
+const STORE = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions'
+})
 
 const app = express();
 const port = process.env.PORT || 3000; 
@@ -18,11 +27,21 @@ const authRouter = require('./routes/auth');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
+app.use(session({ 
+  secret: 'My secret', 
+  resave: false, 
+  saveUninitialized: true,
+  store: STORE,
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+  }
+}));
+
 // Pointing user to request
 app.use((req, res, next) => {
-  User.findById("64f0e27342673e7e634b4667")
+  User.findById("64fa0dce02ce4a922788f0c1")
     .then((user) => {
-      req.user = user;
+      req.session.user = user;
       next();
     })
     .catch((err) => console.log(err))
@@ -48,7 +67,7 @@ app.use((req, res, next) => {
 });
 
 // Listen and database
-mongoose.connect('mongodb://127.0.0.1:27017/eccomerce')
+mongoose.connect(`${MONGODB_URI}`)
   .then(() => {
     
     // Creating a new user
