@@ -8,7 +8,8 @@ exports.getIndex = (req, res, next) => {
       res.render('shop/index', {
         path: '/',
         pageTitle: 'Shop',
-        products
+        products,
+        isAuthenticated: req.isLoggedIn
       });
     })
     .catch((err) => {
@@ -28,7 +29,8 @@ exports.getCart = async (req, res) => {
   res.render('shop/cart', {
     path: '/cart',
     pageTitle: 'Cart',
-    products
+    products,
+    isAuthenticated: req.isLoggedIn
   });
 
 }
@@ -64,7 +66,8 @@ exports.getOrders = (req, res) => {
       res.render('shop/orders', {
         path: '/orders',
         pageTitle: 'Orders',
-        orders
+        orders,
+        isAuthenticated: req.isLoggedIn
       });
     });
 }

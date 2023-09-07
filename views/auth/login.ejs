@@ -6,14 +6,52 @@
 
       
       <section class="container my-5">
-    
-        <header>
-          <h3>Login</h3>
+
+        <header class="row">
+          <div class="col-4 offset-4 text-center">
+            <h3>Hola</h3>
+            <p>Inicia sesión en eBay o <a href="/register">crea una cuenta</a></p>
+          </div>
         </header>
+    
+        
+        <article class="row mt-5">
 
-        <article class="mt-3">
+          <!-- FORMULARIO -->
+          <form class="col-4 offset-4" action="/login" method="POST">
 
-      
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label for="email">E-Mail</label>
+              <input 
+                type="email" 
+                name="email" 
+                class="form-control"
+                placeholder="Example: test@test.com"
+              />
+            </div>
+            <!-- END -->
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+              <label for="password">Password</label>
+              <input 
+                type="password" 
+                name="password" 
+                class="form-control"
+              />
+            </div>
+            <!-- END -->
+
+            <div class="mb-3">
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="submit">Iniciar sesion</button>
+              </div>
+            </div>
+
+          </form>
+          <!-- END -->
+          
         </article>
 
       </section>
