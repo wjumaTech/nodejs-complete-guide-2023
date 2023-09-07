@@ -12,6 +12,7 @@ const User = require('./models/user');
 // Routes
 const adminRoute = require('./routes/admin');
 const shopRoute = require('./routes/shop');
+const authRouter = require('./routes/auth');
 
 // Body parse
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -36,7 +37,10 @@ app.set('view engine', 'ejs');
 
 // Use routes
 app.use('/admin', adminRoute);
-app.use('/', shopRoute);
+app.use(shopRoute);
+app.use(authRouter);
+
+
 app.use((req, res, next) => {
   res
     .status(404)

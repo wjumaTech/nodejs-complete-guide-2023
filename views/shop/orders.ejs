@@ -13,7 +13,7 @@
 
         <article class="row mt-3">
           
-          <% if(orders.length > 0) { %>
+          <% if(orders.lenght > 0) { %>
             <% for( order of orders ) { %>
               <div class="col-12 mb-2">
                 <div class="card">
@@ -29,6 +29,8 @@
                 </div>
               </div>
             <% } %>
+          <% } else { %>
+            <h3>There are not orders realized</h3>
           <% } %>
 
         </article>
