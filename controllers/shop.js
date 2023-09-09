@@ -1,6 +1,22 @@
 const Product = require('../models/product');
 const Order = require('../models/order');
 
+exports.getProducts = (req, res, next) => {
+
+  Product.find()
+    .then((products)=> {
+      res.render('shop/product-list', {
+        path: '/',
+        pageTitle: 'Shop',
+        products,
+        isAuthenticated: req.session.isLoggedIn
+      });
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
 exports.getIndex = (req, res, next) => {
 
   Product.find()
@@ -15,6 +31,14 @@ exports.getIndex = (req, res, next) => {
     .catch((err) => {
       console.log(err)
     })
+}
+
+exports.getProductDetail = (req, res) => {
+  res.render('shop/product-detail', {
+    path: '/product/:titleSlug',
+    pageTitle: 'Product detail',
+    isAuthenticated: req.session.isLoggedIn
+  })
 }
 
 exports.getCart = async (req, res) => {

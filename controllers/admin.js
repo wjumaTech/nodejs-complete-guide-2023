@@ -1,6 +1,7 @@
 
 // Mongoose product model
 const Product = require('../models/product');
+const { slugTextConverter } = require('../util/helpers');
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -13,13 +14,21 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
+
+  /**
+   * Create SLUG text 
+   */
+  const titleSlug = slugTextConverter(title);
+
   const product = new Product({
     title, 
+    titleSlug,
     price, 
     imageUrl, 
     description,
     userId: req.user
   })
+
   product.save()
     .then((productSaved) => {
       console.log('Created product!');
