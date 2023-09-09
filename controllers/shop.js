@@ -23,7 +23,7 @@ exports.getCart = async (req, res) => {
    * In this case we use async/await becouse mongoose migrated populate
    * to this new paradig.
    */
-  const cartUserProducts = await req.session.user.populate('cart.items.productId');
+  const cartUserProducts = await req.user.populate('cart.items.productId');
   const products =  await cartUserProducts.cart.items;
 
   res.render('shop/cart', {
@@ -42,9 +42,10 @@ exports.postCart = (req, res, next) => {
   // Get Find product for add to cart
   Product.findById(prodId)
     .then((product) => {
-      return req.session.user.addToCart(product);
+      return req.user.addToCart(product);
     })
     .then((result) => {
+      // console.log(result)
       console.log('Se ha agregado un producto al carrito de compras')
       res.redirect('/cart')
     })
@@ -53,15 +54,15 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res) => {
   const prodId = req.body.productId;
-  req.session.user.deleteItemFromCart(prodId)
+  req.user.deleteItemFromCart(prodId)
     .then(() => {
-      console.log(`Product with ID: ${prodId} was deleted successfully!`);
+      console.log(`El producto con el ID: ${prodId} fue eliminado del carrito de compras`);
       res.redirect('/cart')
     })
-}
+} 
 
 exports.getOrders = (req, res) => {
-  Order.find({ 'user.userId': req.session.user._id })
+  Order.find({ 'user.userId': req.user._id })
     .then((orders) => {
       res.render('shop/orders', {
         path: '/orders',
@@ -73,7 +74,7 @@ exports.getOrders = (req, res) => {
 }
 
 exports.postOrder = async (req, res) => {
-  const user = await req.session.user.populate('cart.items.productId');
+  const user = await req.user.populate('cart.items.productId');
   const products =  await user.cart.items.map(i => {
 
     /**
@@ -94,7 +95,7 @@ exports.postOrder = async (req, res) => {
   })
   await order.save();
   console.log('Se ha creado una orden de compra.')
-  await req.session.user.clearCart();
+  await req.user.clearCart();
   console.log('Cache carrito borrada!.')
   res.redirect('/orders');
 }

@@ -39,9 +39,18 @@ app.use(session({
 
 // Pointing user to request
 app.use((req, res, next) => {
-  User.findById("64fa0dce02ce4a922788f0c1")
+
+  /**
+   * En este punto necesitamos indicar si el usuario existe para evitarnos el 
+   * siguiente error: Cannot read properties of undefined (reading '_id')
+   */
+  if( !req.session.user ) {
+    return next();
+  }
+
+  User.findById( req.session.user._id )
     .then((user) => {
-      req.session.user = user;
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err))
