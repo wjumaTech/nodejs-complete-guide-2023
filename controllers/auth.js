@@ -1,8 +1,7 @@
-const { request, response } = require('express');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 exports.getLogin = (req, res) => {
-  // const isLoggedIn = req.get('cookie').split(';')[0].split('=')[1];
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
@@ -10,27 +9,64 @@ exports.getLogin = (req, res) => {
   });
 }
 
-exports.postLogin = async (req=request, res=response) => {
- 
-  /**
-   * Simulando un inicio de session con autenticacion de usuario a lo duro
-   * esto hasta que consultemos tomando los datos de un formulario.
-   */
-  const user = await User.findById("64fa0dce02ce4a922788f0c1");
-  req.session.user = user;
-  req.session.isLoggedIn = true;
-
-  /**
-   * Guardar la session puede tardar, por lo que la redireccion la haremos 
-   * una vez session termine el proceso
-   */
-  req.session.save((err) => {
-    if(err) {
+exports.postLogin = (req, res) => {
+  const { email, password } = req.body;
+  User.findOne({ 'email': email })
+    .then((user) => {
+      if(!user) {
+        console.log('El usuario no existe');
+        return res.redirect('/login');
+      }
+      bcrypt.compare(password, user.password)
+        .then((doMatch) => {
+          if(doMatch) {
+            req.session.user = user;
+            req.session.isLoggedIn = true;
+            return req.session.save((err) => {
+              if(err) { console.log(err); }
+              res.redirect('/')
+            });
+          }
+          console.log('La contrasena es incorrecta')
+          res.redirect('/login');
+        })
+    })
+    .catch((err) => {
       console.log(err);
-    }
-    res.redirect('/')
-  });
+    });
 }
+
+exports.getSignup = (req, res) => {
+  res.render('auth/signup', {
+    path: '/signup',
+    pageTitle: 'Signup',
+    isAuthenticated: false
+  })
+}
+
+exports.postSignup = (req, res) => {
+  const { name, lastName, email, password, confirmPassword } = req.body;
+  User.findOne({ 'email': email })
+    .then((user) => {
+      if(user) {
+        console.log(`El usuario ya existe, redirigiendo a login para iniciar sesion`);
+        return res.redirect('/login');
+      }
+      const salt = bcrypt.genSaltSync(12);
+      return bcrypt.hash(password, salt)
+      .then((hashedPassword) => {
+        const createUser = new User({ name, lastName, email, password: hashedPassword, cart: {items: []} });
+        return createUser.save();
+      })
+      .then((userDoc) => {
+        res.status(201).redirect('/login');
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
 
 exports.postLogout = (req, res) => {
   req.session.destroy((err) => {

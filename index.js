@@ -13,7 +13,7 @@ const STORE = new MongoDBStore({
 })
 
 const app = express();
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT || 3000;
 
 // DB models
 const User = require('./models/user');
@@ -27,9 +27,9 @@ const authRouter = require('./routes/auth');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 
-app.use(session({ 
-  secret: 'My secret', 
-  resave: false, 
+app.use(session({
+  secret: 'My secret',
+  resave: false,
   saveUninitialized: true,
   store: STORE,
   cookie: {
@@ -41,7 +41,7 @@ app.use(session({
 app.use((req, res, next) => {
 
   /**
-   * En este punto necesitamos indicar si el usuario existe para evitarnos el 
+   * En este punto necesitamos indicar si el usuario existe para evitarnos el
    * siguiente error: Cannot read properties of undefined (reading '_id')
    */
   if( !req.session.user ) {
@@ -54,7 +54,7 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err))
-}) 
+})
 
 // Static files
 app.use(express.static(path.join(__dirname, 'public')))
@@ -72,40 +72,41 @@ app.use(authRouter);
 app.use((req, res, next) => {
   res
     .status(404)
-    .render('page404', { path: '/page404' })
+    .render('page404', { path: '/page404', isAuthenticated: req.session.isLoggedIn })
 });
 
 // Listen and database
 mongoose.connect(`${MONGODB_URI}`)
   .then(() => {
-    
+
     // Creating a new user
-    User.findOne()
-      .then((user) => {
-        if(!user) {
-          const user = new User({
-            name: 'test01',
-            email: 'test01@test.com',
-            cart: {
-              items: []
-            }
-          });
-          return user.save();
-        }
-      })
-      .then((result) => {
-        if(result) {
-          console.log('Se ha creado un nuevo usuario.');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+    // User.findOne()
+    //   .then((user) => {
+    //     if(!user) {
+    //       const user = new User({
+    //         name: 'test01',
+    //         email: 'test01@test.com',
+    //         cart: {
+    //           items: []
+    //         }
+    //       });
+    //       return user.save();
+    //     }
+    //   })
+    //   .then((result) => {
+    //     if(result) {
+    //       console.log('Se ha creado un nuevo usuario.');
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   })
 
     app.listen(
       port,
       console.log(`Server running on port ${port}`)
     );
+    
   })
   .catch((err) => {
     console.log(err);

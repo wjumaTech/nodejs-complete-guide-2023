@@ -6,7 +6,15 @@ const userSchema = new Schema({
     type: String,
     require: true
   },
+  lastName: {
+    type: String,
+    require: true
+  },
   email: {
+    type: String,
+    require: true
+  },
+  password: {
     type: String,
     require: true
   },
@@ -33,7 +41,7 @@ userSchema.methods.addToCart = function(product) {
    * Validamos si el producto a agregar al carrito ya se encuentra agregado
    * de ser asi, obtenemos el index de la ubicacion del mismo.
    */
-  const cartProductIndex = this.cart.items.findIndex( cp => { 
+  const cartProductIndex = this.cart.items.findIndex( cp => {
     return cp.productId.toString() === product._id.toString();
   });
 
@@ -63,7 +71,7 @@ userSchema.methods.addToCart = function(product) {
 userSchema.methods.deleteItemFromCart = function(prodId) {
 
   /**
-   * Para eliminar un articulo de la lista en el carro de compras, primero identificamos el articulo 
+   * Para eliminar un articulo de la lista en el carro de compras, primero identificamos el articulo
    * realizando una busqueda en el carrito del usuario y devolvemos un nuevo arreglo con los articulos
    * omitiendo este ultimo, asi queda eliminado de la lista del carrito de comparas.
    */
@@ -84,4 +92,3 @@ userSchema.methods.clearCart = function() {
 }
 
 module.exports = mongoose.model('User', userSchema);
-

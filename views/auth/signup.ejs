@@ -1,0 +1,103 @@
+<%- include('../includes/head') %>
+
+    <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header class="row">
+          <div class="col-4 offset-4 text-center">
+            <h3>Create an account</h3>
+            <p>
+              ¿Have an account?
+              <a href="/login">Login</a>
+            </p>
+          </div>
+        </header>
+
+
+        <article class="row mt-4">
+
+          <!-- FORMULARIO -->
+          <form class="col-4 offset-4" action="/signup" method="POST">
+
+            <!-- NOMBRE Y APELLIDOS -->
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-6">
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    class="form-control"
+                    placeholder="Joe"
+                  />
+                </div>
+                <div class="col-6">
+                  <label for="lastName">Last name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    class="form-control"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- /. NOMBRE Y APELLIDOS -->
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label for="email">E-Mail</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                placeholder="Example: test@test.com"
+              />
+            </div>
+            <!-- END -->
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+              />
+            </div>
+            <!-- END -->
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="mb-3">
+              <label for="confirmPassword">Confirm password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-control"
+              />
+            </div>
+            <!-- END -->
+
+            <div class="mb-3">
+              <div class="d-grid gap-2">
+                <button class="btn btn-dark" type="submit">Create account</button>
+              </div>
+            </div>
+
+          </form>
+          <!-- END -->
+
+        </article>
+
+      </section>
+
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

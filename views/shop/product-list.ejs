@@ -22,7 +22,7 @@
                     <p class="card-text"><%= product.description.slice(0,160)%> <span class="fw-lighter">...</span></p>
                     <div class="d-flex align-items-center">
                       <div class="col-3 justify-content-center d-flex">
-                        <span class="badge text-bg-light" style="font-size: 1rem;"><a href="/product/<%= product.titleSlug %>">Detail</a></span>
+                        <span class="badge text-bg-light" style="font-size: 1rem;"><a href="/products/<%= product.titleSlug %>">Detail</a></span>
                       </div>
                       <div class="col-9 justify-content-center d-flex">
                         <% if( isAuthenticated ) { %>
