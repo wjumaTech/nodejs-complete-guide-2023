@@ -4,12 +4,12 @@
 
     <main>
 
-      
+
       <section class="container my-5">
         <div class="row">
           <div class="col-lg-12">
-          
- 
+
+
               <div class="card-body store-body">
                 <div class="product-info">
 
@@ -33,7 +33,7 @@
                   <!-- PRODUCT SELLER RECOMMENDED ITEM -->
                   <div class="product-seller-recommended">
 
-                    
+
                     <h3 class="mb-5">More from Avispa's Store</h3>
 
                     <!-- RECOMMENDED ITEMS -->
@@ -49,7 +49,7 @@
                       </div>
                     </div>
                     <!-- /. RECOMMENDED ITEMS -->
-                   
+
                     <p class="mb-5 mt-5"><a href="#">See all ads from this seller</a></p>
                     <div class="product-description mb-5">
                       <h2 class="mb-5">Features</h2>
@@ -77,7 +77,9 @@
                     </div>
                     <div class="product-comments">
                       <h5 class="mb-2">Or ask to David's Store</h5>
-                      <form action="" class="form-inline mb-5">
+                      <form action="/ask" method="POST" class="form-inline mb-5">
+                        <!-- csrfToken -->
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                         <textarea name="" id="" cols="50" rows="2" class="form-control mr-4" placeholder="write a question"></textarea><button class="btn btn-lg btn-primary">Ask</button>
                       </form>
                       <h5 class="mb-5">Lastest Questions</h5>
@@ -99,11 +101,11 @@
                   <h4 class="product-title mb-2"><%= product.title %></h4>
                   <h2 class="product-price display-4">$ <%= product.price %></h2>
                   <p class="text-success">
-                    <i class="fa fa-credit-card"></i> 
+                    <i class="fa fa-credit-card"></i>
                     12x or  5x $ 5.00
                   </p>
                   <p class="mb-0">
-                    <i class="fa fa-truck"></i> 
+                    <i class="fa fa-truck"></i>
                     Delivery in all territory
                   </p>
                   <div class="text-muted mb-2">
@@ -115,18 +117,18 @@
                   <div class="d-grip gap-2">
                     <button class="btn btn-primary w-100 btn-lg">Buy Now</button>
                   </div>
-                  
+
                 </div>
                 <!-- /. DETAIL PAYMENT -->
               </div>
-        
+
           </div>
         </div>
-     
-    
+
+
 
       </section>
-      
+
     </main>
   </body>
 

@@ -17,32 +17,32 @@
             <form action="/admin/<%if(editing){%>edit-product<%}else{%>add-product<%}%>" method="post">
               <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="title" 
-                  name="title" 
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
                   placeholder="Write here some title"
                   value="<%if(editing){%><%=product.title%><%}%>"
               </div>
               <div class="mb-3">
                 <label for="price" class="form-label">Price</label>
-                <input 
-                  type="number" 
-                  class="form-control" 
-                  step="0.01" 
-                  id="price" 
-                  name="price" 
+                <input
+                  type="number"
+                  class="form-control"
+                  step="0.01"
+                  id="price"
+                  name="price"
                   placeholder="1.99"
                   value="<%if(editing){%><%= product.price %><%}%>">
               </div>
               <div class="mb-3">
                 <label for="imageUrl" class="form-label">Imagen</label>
-                <input 
-                  type="text" 
-                  class="form-control" 
-                  id="imageUrl" 
-                  name="imageUrl" 
+                <input
+                  type="text"
+                  class="form-control"
+                  id="imageUrl"
+                  name="imageUrl"
                   placeholder="no-image.png"
                   value="<%if(editing){%><%=product.imageUrl%><%}%>">
               </div>
@@ -53,6 +53,8 @@
                 <label for="description" class="form-label">Description</label>
                 <textarea class="form-control" id="description" name="description" rows="3"><%if(editing){%><%=product.title%><%}else{%>Write a small description about the product.<%}%></textarea>
               </div>
+              <!-- csrfToken -->
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button class="btn btn-<%if(editing){%>success<%}else{%>primary<%}%>"><%if(editing){%>Update product<%}else{%>Create product<%}%></button>
             </form>
           </div>

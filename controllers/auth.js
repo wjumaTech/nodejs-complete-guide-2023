@@ -2,10 +2,19 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
 exports.getLogin = (req, res) => {
+
+  let message = req.flash('error');
+  if( message.length > 0 ) {
+    message = message[0]
+  } else {
+    message = null
+  }
+
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: false
+    csrfToken: req.csrfToken(),
+    errorMessage: message
   });
 }
 
@@ -15,6 +24,7 @@ exports.postLogin = (req, res) => {
     .then((user) => {
       if(!user) {
         console.log('El usuario no existe');
+        req.flash('error', 'Username does not exist');
         return res.redirect('/login');
       }
       bcrypt.compare(password, user.password)
@@ -27,7 +37,8 @@ exports.postLogin = (req, res) => {
               res.redirect('/')
             });
           }
-          console.log('La contrasena es incorrecta')
+          console.log('La contrasena es incorrecta');
+          req.flash('error', 'Password is incorrect');
           res.redirect('/login');
         })
     })
@@ -37,10 +48,17 @@ exports.postLogin = (req, res) => {
 }
 
 exports.getSignup = (req, res) => {
+  let message = req.flash('error');
+  if( message.length > 0 ) {
+    message = message[0]
+  } else {
+    message = null
+  }
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    isAuthenticated: false
+    csrfToken: req.csrfToken(),
+    errorMessage: message
   })
 }
 
@@ -50,7 +68,8 @@ exports.postSignup = (req, res) => {
     .then((user) => {
       if(user) {
         console.log(`El usuario ya existe, redirigiendo a login para iniciar sesion`);
-        return res.redirect('/login');
+        req.flash('error', 'Email already exist, please pick other one');
+        return res.redirect('/signup');
       }
       const salt = bcrypt.genSaltSync(12);
       return bcrypt.hash(password, salt)

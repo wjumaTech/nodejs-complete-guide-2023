@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const cookieParser = require('cookie-parser');
+const csurf = require('tiny-csrf');
+const flash = require('connect-flash');
 
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/avispa';
 
@@ -26,6 +29,7 @@ const authRouter = require('./routes/auth');
 // Body parse
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+app.use(cookieParser("My secret"));
 
 app.use(session({
   secret: 'My secret',
@@ -36,14 +40,17 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
   }
 }));
+app.use(
+  csurf(
+    "wtshdjyctejdkslyehjdyshdjcngmf12",
+    ["POST"],
+    // ["/detail", /\/detail\.*/i], // any URLs we want to exclude, either as strings or regexp
+    [process.env.SITE_URL + "/service-worker.js"]
+  )
+)
+app.use(flash());
 
-// Pointing user to request
 app.use((req, res, next) => {
-
-  /**
-   * En este punto necesitamos indicar si el usuario existe para evitarnos el
-   * siguiente error: Cannot read properties of undefined (reading '_id')
-   */
   if( !req.session.user ) {
     return next();
   }
@@ -54,6 +61,10 @@ app.use((req, res, next) => {
       next();
     })
     .catch((err) => console.log(err))
+});
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  next();
 })
 
 // Static files
@@ -72,41 +83,17 @@ app.use(authRouter);
 app.use((req, res, next) => {
   res
     .status(404)
-    .render('page404', { path: '/page404', isAuthenticated: req.session.isLoggedIn })
+    .render('page404', { path: '/page404' })
 });
 
 // Listen and database
 mongoose.connect(`${MONGODB_URI}`)
   .then(() => {
-
-    // Creating a new user
-    // User.findOne()
-    //   .then((user) => {
-    //     if(!user) {
-    //       const user = new User({
-    //         name: 'test01',
-    //         email: 'test01@test.com',
-    //         cart: {
-    //           items: []
-    //         }
-    //       });
-    //       return user.save();
-    //     }
-    //   })
-    //   .then((result) => {
-    //     if(result) {
-    //       console.log('Se ha creado un nuevo usuario.');
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   })
-
     app.listen(
       port,
       console.log(`Server running on port ${port}`)
     );
-    
+
   })
   .catch((err) => {
     console.log(err);

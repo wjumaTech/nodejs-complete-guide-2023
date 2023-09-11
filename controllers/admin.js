@@ -1,5 +1,3 @@
-
-// Mongoose product model
 const Product = require('../models/product');
 const { slugTextConverter } = require('../util/helpers');
 
@@ -8,7 +6,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'Add product',
     path: '/admin/add-product',
     editing: false,
-    isAuthenticated: req.session.isLoggedIn
+    csrfToken: req.csrfToken()
   });
 }
 
@@ -16,15 +14,15 @@ exports.postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
 
   /**
-   * Create SLUG text 
+   * Create SLUG text
    */
   const titleSlug = slugTextConverter(title);
 
   const product = new Product({
-    title, 
+    title,
     titleSlug,
-    price, 
-    imageUrl, 
+    price,
+    imageUrl,
     description,
     userId: req.user
   })
@@ -55,7 +53,7 @@ exports.getEditProduct = (req, res, next) => {
         path: '/admin/edit-product',
         editing: editMode,
         product: product,
-        isAuthenticated: req.session.isLoggedIn
+        csrfToken: req.csrfToken()
       });
     });
 }
@@ -85,7 +83,7 @@ exports.getProducts = (req, res, next) => {
         pageTitle: 'Admin Products',
         path: '/admin/products',
         products,
-        isAuthenticated: req.session.isLoggedIn
+        csrfToken: req.csrfToken()
       });
     })
     .catch((err) => console.log(err));

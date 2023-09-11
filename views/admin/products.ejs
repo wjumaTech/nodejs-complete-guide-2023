@@ -4,14 +4,14 @@
 
     <main>
 
-      
+
       <section class="container my-5">
-    
+
         <header>
           <h3><%= pageTitle %></h3>
           <p>Get All Of Admin Products</p>
         </header>
-     
+
         <% if(products.length > 0) { %>
           <div class="row">
           <% for( product of products )  {%>
@@ -30,6 +30,8 @@
                       <div class="col">
                         <form action="/admin/delete-product" method="post">
                           <input type="hidden" value="<%=product._id%>" name="productId">
+                          <!-- csrfToken -->
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                           <button type="submit" class="btn btn-outline-danger">
                             <i class="bi bi-trash"></i> Delete
                           </button>
@@ -46,7 +48,7 @@
         <% } %>
 
       </section>
-      
+
     </main>
   </body>
 

@@ -20,6 +20,13 @@
           <!-- FORMULARIO -->
           <form class="col-4 offset-4" action="/login" method="POST">
 
+            <!-- VALIDACION DEL FORMULARIO -->
+            <% if(errorMessage) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            <% } %>
+
             <!-- EMAIL -->
             <div class="mb-3">
               <label for="email">E-Mail</label>
@@ -42,6 +49,9 @@
               />
             </div>
             <!-- END -->
+
+            <!-- csrfToken -->
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
             <div class="mb-3">
               <div class="d-grid gap-2">

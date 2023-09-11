@@ -5,10 +5,10 @@ exports.getProducts = (req, res, next) => {
   Product.find()
     .then((products)=> {
       res.render('shop/product-list', {
-        path: '/',
-        pageTitle: 'Shop',
+        path: '/products',
+        pageTitle: 'Products',
         products,
-        isAuthenticated: req.session.isLoggedIn
+        csrfToken: req.csrfToken()
       });
     })
     .catch((err) => {
@@ -17,14 +17,13 @@ exports.getProducts = (req, res, next) => {
 }
 
 exports.getIndex = (req, res, next) => {
-  console.log(req.session)
   Product.find()
     .then((products)=> {
       res.render('shop/index', {
         path: '/',
         pageTitle: 'Shop',
         products,
-        isAuthenticated: req.session.isLoggedIn
+        csrfToken: req.csrfToken()
       });
     })
     .catch((err) => {
@@ -39,7 +38,7 @@ exports.getProductDetail = async (req, res) => {
       path: '/product/:titleSlug',
       pageTitle: 'Product detail',
       product,
-      isAuthenticated: req.session.isLoggedIn
+      csrfToken: req.csrfToken()
     })
   } catch (error) {
     console.log(error);
@@ -59,7 +58,7 @@ exports.getCart = async (req, res) => {
     path: '/cart',
     pageTitle: 'Cart',
     products,
-    isAuthenticated: req.session.isLoggedIn
+    csrfToken: req.csrfToken()
   });
 
 }
@@ -95,7 +94,7 @@ exports.getOrders = (req, res) => {
         path: '/orders',
         pageTitle: 'Orders',
         orders,
-        isAuthenticated: req.session.isLoggedIn
+        csrfToken: req.csrfToken()
       });
     });
 }
@@ -116,6 +115,8 @@ exports.postOrder = async (req, res) => {
   const order = new Order({
     user: {
       name: req.user.name,
+      lastName: req.user.lastName,
+      email: req.user.email,
       userId: req.user
     },
     products

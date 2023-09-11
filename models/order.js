@@ -20,6 +20,14 @@ const orderSchema = new Schema({
       type: String,
       require: true
     },
+    lastName: {
+      type: String,
+      require: true
+    },
+    email: {
+      type: String,
+      require: true
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
