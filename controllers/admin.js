@@ -12,12 +12,7 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res) => {
   const { title, price, imageUrl, description } = req.body;
-
-  /**
-   * Create SLUG text
-   */
   const titleSlug = slugTextConverter(title);
-
   const product = new Product({
     title,
     titleSlug,
@@ -26,7 +21,6 @@ exports.postAddProduct = (req, res) => {
     description,
     userId: req.user
   })
-
   product.save()
     .then((productSaved) => {
       console.log('Created product!');

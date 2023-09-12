@@ -25,6 +25,7 @@ const User = require('./models/user');
 const adminRoute = require('./routes/admin');
 const shopRoute = require('./routes/shop');
 const authRouter = require('./routes/auth');
+const page404Route = require('./routes/page404');
 
 // Body parse
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -64,6 +65,7 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
+  // res.locals.csrfToken = req.csrfToken();
   next();
 })
 
@@ -78,13 +80,7 @@ app.set('view engine', 'ejs');
 app.use('/admin', adminRoute);
 app.use(shopRoute);
 app.use(authRouter);
-
-
-app.use((req, res, next) => {
-  res
-    .status(404)
-    .render('page404', { path: '/page404' })
-});
+app.use(page404Route);
 
 // Listen and database
 mongoose.connect(`${MONGODB_URI}`)
