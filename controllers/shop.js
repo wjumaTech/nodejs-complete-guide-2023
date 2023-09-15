@@ -8,7 +8,7 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
         pageTitle: 'Products',
         products,
-        csrfToken: req.csrfToken()
+        
       });
     })
     .catch((err) => {
@@ -23,7 +23,7 @@ exports.getIndex = (req, res, next) => {
         path: '/',
         pageTitle: 'Shop',
         products,
-        csrfToken: req.csrfToken()
+        
       });
     })
     .catch((err) => {
@@ -38,7 +38,7 @@ exports.getProductDetail = async (req, res) => {
       path: '/product/:titleSlug',
       pageTitle: 'Product detail',
       product,
-      csrfToken: req.csrfToken()
+      
     })
   } catch (error) {
     console.log(error);
@@ -58,7 +58,7 @@ exports.getCart = async (req, res) => {
     path: '/cart',
     pageTitle: 'Cart',
     products,
-    csrfToken: req.csrfToken()
+    
   });
 
 }
@@ -94,7 +94,7 @@ exports.getOrders = (req, res) => {
         path: '/orders',
         pageTitle: 'Orders',
         orders,
-        csrfToken: req.csrfToken()
+        
       });
     });
 }

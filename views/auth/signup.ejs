@@ -1,6 +1,6 @@
 <%- include('../includes/head') %>
 
-  <%- include('../includes/navigate', { csrfToken }) %>
+  <%- include('../includes/navigate') %>
 
     <main>
 
@@ -8,7 +8,7 @@
       <section class="container my-5">
 
         <header class="row">
-          <div class="col-4 offset-4 text-center">
+          <div class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
             <h3>Create an account</h3>
             <p>
               ¿Have an account?
@@ -21,7 +21,12 @@
         <article class="row mt-4">
 
           <!-- FORMULARIO -->
-          <form class="col-4 offset-4" action="/signup" method="POST">
+          <form 
+            class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4" 
+            action="/signup" 
+            method="POST"
+            novalidate
+          >
 
             <!-- VALIDACION DEL FORMULARIO -->
             <% if(errorMessage) { %>
@@ -95,7 +100,7 @@
 
             <div class="mb-3">
               <div class="d-grid gap-2">
-                <button class="btn btn-dark" type="submit">Create account</button>
+                <button class="btn btn-dark" type="submit">Signup</button>
               </div>
             </div>
 

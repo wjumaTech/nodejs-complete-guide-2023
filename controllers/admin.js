@@ -6,7 +6,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: 'Add product',
     path: '/admin/add-product',
     editing: false,
-    csrfToken: req.csrfToken()
+    
   });
 }
 
@@ -47,7 +47,7 @@ exports.getEditProduct = (req, res, next) => {
         path: '/admin/edit-product',
         editing: editMode,
         product: product,
-        csrfToken: req.csrfToken()
+        
       });
     });
 }
@@ -84,7 +84,7 @@ exports.getProducts = (req, res, next) => {
         pageTitle: 'Admin Products',
         path: '/admin/products',
         products,
-        csrfToken: req.csrfToken()
+        
       });
     })
     .catch((err) => console.log(err));

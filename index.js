@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const cookieParser = require('cookie-parser');
-const csurf = require('tiny-csrf');
+const csrf = require('tiny-csrf');
 const flash = require('connect-flash');
 
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/avispa';
@@ -14,6 +14,7 @@ const STORE = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 })
+const csrfProtection = csrf("123456789iamasecret987654321look",  ["POST"]);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -30,6 +31,11 @@ const page404Route = require('./routes/page404');
 // Body parse
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
+
+// Static files
+app.use(express.static(path.join(__dirname, 'public')))
+
+// Cookie parser
 app.use(cookieParser("My secret"));
 
 app.use(session({
@@ -41,14 +47,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
   }
 }));
-app.use(
-  csurf(
-    "wtshdjyctejdkslyehjdyshdjcngmf12",
-    ["POST"],
-    // ["/detail", /\/detail\.*/i], // any URLs we want to exclude, either as strings or regexp
-    [process.env.SITE_URL + "/service-worker.js"]
-  )
-)
+app.use(csrfProtection)
 app.use(flash());
 
 app.use((req, res, next) => {
@@ -63,14 +62,11 @@ app.use((req, res, next) => {
     })
     .catch((err) => console.log(err))
 });
+
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
-  // res.locals.csrfToken = req.csrfToken();
   next();
 })
-
-// Static files
-app.use(express.static(path.join(__dirname, 'public')))
 
 // Engine template
 app.set('views', path.join(__dirname, 'views'))

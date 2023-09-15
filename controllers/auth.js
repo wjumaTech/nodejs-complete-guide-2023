@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
 const nodemailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
+const { validationResult } = require('express-validator');
 
 const User = require('../models/user');
 
@@ -79,7 +80,20 @@ exports.getSignup = (req, res) => {
 }
 
 exports.postSignup = (req, res) => {
+  const result = validationResult(req);
+  if(!result.isEmpty()){
+    return res
+      .status(422)
+      .render('auth/signup', {
+        path: '/signup',
+        pageTitle: 'Signup',
+        csrfToken: req.csrfToken(),
+        errorMessage: result.array()[0].msg
+      })
+  }
+
   const { name, lastName, email, password, confirmPassword } = req.body;
+
   User.findOne({ 'email': email })
     .then((user) => {
       if(user) {

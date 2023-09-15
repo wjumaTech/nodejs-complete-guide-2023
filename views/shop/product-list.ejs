@@ -1,6 +1,6 @@
 <%- include('../includes/head') %>
 
-  <%- include('../includes/navigate', { csrfToken }) %>
+  <%- include('../includes/navigate') %>
 
     <main>
 
@@ -26,7 +26,7 @@
                       </div>
                       <div class="col-9 justify-content-center d-flex">
                         <% if( isAuthenticated ) { %>
-                          <%- include('../includes/add-to-cart', { product: product })  %>
+                          <%- include('../includes/add-to-cart')  %>
                         <% } else { %>
                           <a href="/login" class="btn btn-light">Add to cart</a>
                         <% } %>
