@@ -45,6 +45,7 @@
                     name="name"
                     class="form-control"
                     placeholder="Joe"
+                    value="<%= formData.name %>"
                   />
                 </div>
                 <div class="col-6">
@@ -54,6 +55,7 @@
                     name="lastName"
                     class="form-control"
                     placeholder="Doe"
+                    value="<%= formData.lastName %>"
                   />
                 </div>
               </div>
@@ -69,6 +71,7 @@
                 name="email"
                 class="form-control"
                 placeholder="Example: test@test.com"
+                value="<%= formData.email %>"
               />
             </div>
             <!-- END -->
@@ -80,6 +83,7 @@
                 type="password"
                 name="password"
                 class="form-control"
+                value="<%= formData.password %>"
               />
             </div>
             <!-- END -->
@@ -91,12 +95,13 @@
                 type="password"
                 name="confirmPassword"
                 class="form-control"
+                value="<%= formData.confirmPassword %>"
               />
             </div>
             <!-- END -->
 
             <!-- csrfToken -->
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            
 
             <div class="mb-3">
               <div class="d-grid gap-2">

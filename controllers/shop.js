@@ -57,8 +57,7 @@ exports.getCart = async (req, res) => {
   res.render('shop/cart', {
     path: '/cart',
     pageTitle: 'Cart',
-    products,
-    
+    products
   });
 
 }

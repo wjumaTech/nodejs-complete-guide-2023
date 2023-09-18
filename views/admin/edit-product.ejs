@@ -54,7 +54,7 @@
                 <textarea class="form-control" id="description" name="description" rows="3"><%if(editing){%><%=product.title%><%}else{%>Write a small description about the product.<%}%></textarea>
               </div>
               <!-- csrfToken -->
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              
               <button class="btn btn-<%if(editing){%>success<%}else{%>primary<%}%>"><%if(editing){%>Update product<%}else{%>Create product<%}%></button>
             </form>
           </div>

@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const cookieParser = require('cookie-parser');
-const csrf = require('tiny-csrf');
+
 const flash = require('connect-flash');
 
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/avispa';
@@ -14,7 +14,7 @@ const STORE = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 })
-const csrfProtection = csrf("123456789iamasecret987654321look",  ["POST"]);
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -47,7 +47,7 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
   }
 }));
-app.use(csrfProtection)
+
 app.use(flash());
 
 app.use((req, res, next) => {
