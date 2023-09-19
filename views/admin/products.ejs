@@ -17,7 +17,9 @@
           <% for( product of products )  {%>
               <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-1">
                 <div class="card">
-                  <img src="<%= product.imageUrl%>" class="card-img-top" alt="">
+                  <div class="img-box">
+                    <img src="<%= product.imageUrl%>" class="card-img-top" alt="">
+                  </div>
                   <div class="card-body">
                     <h3 class="card-title"><%= product.title.slice(0,50)%> <span class="fw-lighter">...</span> </h3>
                     <p class="card-text"><%= product.description.slice(0,160)%> <span class="fw-lighter">...</span></p>
@@ -30,8 +32,6 @@
                       <div class="col">
                         <form action="/admin/delete-product" method="post">
                           <input type="hidden" value="<%=product._id%>" name="productId">
-                          <!-- csrfToken -->
-                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                           <button type="submit" class="btn btn-outline-danger">
                             <i class="bi bi-trash"></i> Delete
                           </button>

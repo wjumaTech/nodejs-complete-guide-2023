@@ -37,8 +37,7 @@ exports.getProductDetail = async (req, res) => {
     res.render('shop/product-detail', {
       path: '/product/:titleSlug',
       pageTitle: 'Product detail',
-      product,
-      
+      product
     })
   } catch (error) {
     console.log(error);

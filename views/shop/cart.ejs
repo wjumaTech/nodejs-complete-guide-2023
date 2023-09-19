@@ -24,8 +24,6 @@
                   </div>
                   <form action="/cart-delete-item" method="post">
                     <input type="hidden" name="productId" id="productId" value="<%= product.productId._id%>">
-                    <!-- csrfToken -->
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit" class="badge border-0 bg-danger rounded-pill">
                       <i class="bi bi-trash3"></i>
                     </button>
@@ -34,7 +32,6 @@
               </ol>
             <% } %>
             <form action="/create-order" method="post">
-              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
               <button type="submit" class="btn btn-primary mt-4">Order now!</button>
             </form>
           <% } else { %>
