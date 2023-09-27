@@ -18,7 +18,7 @@
         <article class="row mt-4">
 
           <!-- FORMULARIO -->
-          <form class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4" action="/login" method="POST">
+          <form class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4" action="/login" method="POST" novalidate>
 
             <!-- VALIDACION DEL FORMULARIO -->
             <% if(errorMessage) { %>
@@ -33,7 +33,8 @@
               <input
                 type="email"
                 name="email"
-                class="form-control"
+                class="form-control <%= validationErrors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                value="<%= formData.email %>"
                 placeholder="Example: test@test.com"
               />
             </div>
@@ -45,7 +46,8 @@
               <input
                 type="password"
                 name="password"
-                class="form-control"
+                class="form-control <%= validationErrors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
+                value="<%= formData.password %>"
               />
             </div>
             <!-- END -->

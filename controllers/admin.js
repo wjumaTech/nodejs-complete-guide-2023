@@ -1,3 +1,5 @@
+const { validationResult } = require('express-validator');
+
 const Product = require('../models/product');
 const { slugTextConverter } = require('../util/helpers');
 

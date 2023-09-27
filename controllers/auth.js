@@ -15,28 +15,40 @@ const transporter = nodemailer.createTransport(sgTransport({
 }))
 
 exports.getLogin = (req, res) => {
-  let message = req.flash('error');
-  if( message.length > 0 ) {
-    message = message[0]
-  } else {
-    message = null
-  }
-
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    errorMessage: message
+    errorMessage: '',
+    formData: { email:"", password:"" },
+    validationErrors: []
   });
 }
 
 exports.postLogin = (req, res) => {
+
   const { email, password } = req.body;
+  const errors = validationResult(req);
+
+  if(!errors.isEmpty()) {
+    return res.status(422).render('auth/login', {
+      path: '/login',
+      pageTitle: 'login',
+      errorMessage: errors.array()[0].msg,
+      formData: { email, password },
+      validationErrors: errors.array()
+    })
+  }
+
   User.findOne({ 'email': email })
     .then((user) => {
       if(!user) {
-        console.log('El usuario no existe');
-        req.flash('error', 'Username does not exist');
-        return res.redirect('/login');
+        return res.status(422).render('auth/login', {
+          path: '/login',
+          pageTitle: 'Login',
+          errorMessage: 'Email no exist, please try with another one.',
+          formData: { email, password },
+          validationErrors: []
+        });
       }
       bcrypt.compare(password, user.password)
         .then((doMatch) => {
@@ -48,10 +60,14 @@ exports.postLogin = (req, res) => {
               res.redirect('/')
             });
           }
-          console.log('La contrasena es incorrecta');
-          req.flash('error', 'Password is incorrect');
-          res.redirect('/login');
-        })
+          res.status(422).render('auth/login', { 
+            path: '/login',
+            pageTitle: 'login',
+            errorMessage: 'Password is incorrect',
+            formData: { email, password },
+            validationErrors: [{ path: 'password' }]
+          });
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -68,21 +84,24 @@ exports.getSignup = (req, res) => {
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    errorMessage: message
+    errorMessage: message,
+    formData: { name: '', lastName: '', email: '', password: '', confirmPassword: '' },
+    validationErrors: []
   })
 }
 
 exports.postSignup = (req, res) => {
-  const result = validationResult(req);
+  const errors = validationResult(req);
   const { name, lastName, email, password, confirmPassword } = req.body;
-  if(!result.isEmpty()){
+  if(!errors.isEmpty()){
     return res
       .status(422)
       .render('auth/signup', {
         path: '/signup',
         pageTitle: 'Signup',
-        errorMessage: result.array()[0].msg,
-        formData: { name, lastName, email, password, confirmPassword }
+        errorMessage: errors.array()[0].msg,
+        formData: { name, lastName, email, password, confirmPassword },
+        validationErrors: errors.array()
       });
   }
   return bcrypt.hash(password, bcrypt.genSaltSync(12))

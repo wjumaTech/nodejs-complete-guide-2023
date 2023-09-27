@@ -9,14 +9,14 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 
 const MONGODB_PASSWORD = 'KQgdqRRlkfB1Vv6P';
-const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
+const MONGODB_URI = 'mongodb://127.0.0.1:27017/ecommerce';
+// const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
 
 const STORE = new MongoDBStore({
   uri: MONGODB_URI,
   collection: 'sessions'
 })
 
-//KQgdqRRlkfB1Vv6P
 // const csrfProtection = csrf("123456789iamasecret987654321look",  ["POST"]);
 
 const app = express();
