@@ -1,0 +1,84 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main class="my-5">
+
+
+      <section class="container">
+
+        <header>
+          <h3>Add product</h3>
+          <p>Create one product and add to your list</p>
+        </header>
+
+        <div class="row">
+          <div class="col-sm-8 offset-sm-2 col-4 offset-4">
+            <form 
+              action="/admin/<%if(editing){%>edit-product<%}else{%>add-product<%}%>" 
+              method="post"
+            >
+              <!-- VALIDACION DEL FORMULARIO -->
+              <% if(errorMessage) { %>
+                <div class="alert alert-danger" role="alert">
+                  <%= errorMessage %>
+                </div>
+              <% } %>
+
+              <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Write here some title"
+                  value="<%if(editing || hasError){%><%=product.title%><%}%>"
+              </div>
+
+              <div class="mb-3">
+                <label for="price" class="form-label">Price</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  step="0.01"
+                  id="price"
+                  name="price"
+                  placeholder="1.99"
+                  value="<%if(editing || hasError){%><%= product.price %><%}%>">
+              </div>
+
+              <div class="mb-3">
+                <label for="imageUrl" class="form-label">Imagen</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="imageUrl"
+                  name="imageUrl"
+                  placeholder="no-image.png"
+                  value="<%if(editing || hasError){%><%=product.imageUrl%><%}%>">
+              </div>
+
+              <% if (editing) { %>
+                <input type="hidden" value="<%= product._id %>" name="productId">
+              <% } %>
+
+              <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"><%if(editing || hasError){%><%=product.description%><%}else{%>Write a small description about the product.<%}%></textarea>
+              </div>
+
+              <button 
+                class="btn btn-<%if(editing){%>success<%}else{%>primary<%}%>"><%if(editing){%>Update product<%}else{%>Create product<%}%>
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </section>
+
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

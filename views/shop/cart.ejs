@@ -1,0 +1,48 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header>
+          <h3>My cart</h3>
+        </header>
+
+        <article class="mt-3">
+
+          <% if( products.length > 0 ) { %>
+
+            <% for( product of products ) { %>
+              <ol class="list-group mb-2">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold"><%= product.productId.title %></div>
+                    Quantity: <%= product.quantity %>
+                  </div>
+                  <form action="/cart-delete-item" method="post">
+                    <input type="hidden" name="productId" id="productId" value="<%= product.productId._id%>">
+                    <button type="submit" class="badge border-0 bg-danger rounded-pill">
+                      <i class="bi bi-trash3"></i>
+                    </button>
+                  </form>
+                </li>
+              </ol>
+            <% } %>
+            <form action="/create-order" method="post">
+              <button type="submit" class="btn btn-primary mt-4">Order now!</button>
+            </form>
+          <% } else { %>
+            <h3>There are not product in the cart</h3>
+          <% } %>
+        </article>
+
+      </section>
+
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

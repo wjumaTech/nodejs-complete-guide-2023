@@ -1,0 +1,55 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header>
+          <h3><%= pageTitle %></h3>
+          <p>Get All Of Admin Products</p>
+        </header>
+
+        <% if(products.length > 0) { %>
+          <div class="row">
+          <% for( product of products )  {%>
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-1">
+                <div class="card">
+                  <div class="img-box">
+                    <img src="<%= product.imageUrl%>" class="card-img-top" alt="">
+                  </div>
+                  <div class="card-body">
+                    <h3 class="card-title"><%= product.title.slice(0,50)%> <span class="fw-lighter">...</span> </h3>
+                    <p class="card-text"><%= product.description.slice(0,160)%> <span class="fw-lighter">...</span></p>
+                    <div class="row">
+                      <div class="col">
+                        <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn btn-primary">
+                          <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                      </div>
+                      <div class="col">
+                        <form action="/admin/delete-product" method="post">
+                          <input type="hidden" value="<%=product._id%>" name="productId">
+                          <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-trash"></i> Delete
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% }else { %>
+          <h3 style="margin-top: 3rem;">Products not found!</h3>
+        <% } %>
+
+      </section>
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

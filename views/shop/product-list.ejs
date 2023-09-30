@@ -1,0 +1,51 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header>
+          <h3>Products</h3>
+        </header>
+
+        <% if(products.length > 0) { %>
+          <div class="row">
+          <% for( product of products )  {%>
+              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-1">
+                <div class="card">
+                  <div class="img-box">
+                    <img src="<%= product.imageUrl%>" class="card-img-top" alt="">
+                  </div>
+                  <div class="card-body">
+                    <h3 class="card-title"><%= product.title.slice(0,50)%> <span class="fw-lighter">...</span> </h3>
+                    <p class="card-text"><%= product.description.slice(0,160)%> <span class="fw-lighter">...</span></p>
+                    <div class="d-flex align-items-center">
+                      <div class="col-3 justify-content-center d-flex">
+                        <span class="badge text-bg-light" style="font-size: 1rem;"><a href="/products/<%= product.titleSlug %>">Detail</a></span>
+                      </div>
+                      <div class="col-9 justify-content-center d-flex">
+                        <% if( isAuthenticated ) { %>
+                          <%- include('../includes/add-to-cart')  %>
+                        <% } else { %>
+                          <a href="/login" class="btn btn-light">Add to cart</a>
+                        <% } %>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } %>
+          </div>
+        <% }else { %>
+          <h3 style="margin-top: 3rem;">Products not found!</h3>
+        <% } %>
+
+      </section>
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

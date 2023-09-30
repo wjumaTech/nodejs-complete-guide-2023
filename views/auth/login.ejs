@@ -1,0 +1,76 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header class="row">
+          <div class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
+            <h3>Hello</h3>
+            <p>Sign In on <span class="logo">Avispa</span> or <a href="/signup">Create an account</a></p>
+          </div>
+        </header>
+
+
+        <article class="row mt-4">
+
+          <!-- FORMULARIO -->
+          <form class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4" action="/login" method="POST" novalidate>
+
+            <!-- VALIDACION DEL FORMULARIO -->
+            <% if(errorMessage) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            <% } %>
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label for="email">E-Mail</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control <%= validationErrors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                value="<%= formData.email %>"
+                placeholder="Example: test@test.com"
+              />
+            </div>
+            <!-- END -->
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control <%= validationErrors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
+                value="<%= formData.password %>"
+              />
+            </div>
+            <!-- END -->
+
+            <div class="mb-3">
+              <p><a href="/reset-password">I forgot my password</a></p>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-grid gap-2">
+                <button class="btn btn-dark" type="submit">Iniciar sesion</button>
+              </div>
+            </div>
+
+          </form>
+          <!-- END -->
+
+        </article>
+
+      </section>
+
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>

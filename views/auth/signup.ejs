@@ -1,0 +1,130 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main>
+
+
+      <section class="container my-5">
+
+        <header class="row">
+          <div class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4 text-center">
+            <h3>Create an account</h3>
+            <p>
+              ¿Have an account?
+              <a href="/login">Login</a>
+            </p>
+          </div>
+        </header>
+
+
+        <article class="row mt-4">
+
+          <!-- <code>
+            <pre>
+              <%= JSON.stringify(validationErrors, null, 3) %>
+            </pre>
+
+          </code> -->
+
+          <!-- FORMULARIO -->
+          <form 
+            class="col-xs-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4" 
+            action="/signup" 
+            method="POST"
+            novalidate
+          >
+
+            <!-- VALIDACION DEL FORMULARIO -->
+            <% if(errorMessage) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            <% } %>
+
+            <!-- NOMBRE Y APELLIDOS -->
+            <div class="mb-3">
+              <div class="row">
+                <div class="col-6">
+                  <label for="name">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    class="form-control <%= validationErrors.find(e => e.path === 'name') ? 'is-invalid' : '' %>"
+                    value="<%= formData.name %>"
+                    placeholder="Joe"
+                  />
+                </div>
+                <div class="col-6">
+                  <label for="lastName">Last name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    class="form-control <%= validationErrors.find(e => e.path === 'lastName') ? 'is-invalid' : '' %>"
+                    value="<%= formData.lastName %>"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- /. NOMBRE Y APELLIDOS -->
+
+            <!-- EMAIL -->
+            <div class="mb-3">
+              <label for="email">E-Mail</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control <%= validationErrors.find(e => e.path === 'email') ? 'is-invalid' : '' %>"
+                value="<%= formData.email %>"
+                placeholder="Example: test@test.com"
+              />
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+            </div>
+            <!-- END -->
+
+            <!-- PASSWORD -->
+            <div class="mb-3">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control <%= validationErrors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
+                value="<%= formData.password %>"
+              />
+            </div>
+            <!-- END -->
+
+            <!-- CONFIRM PASSWORD -->
+            <div class="mb-3">
+              <label for="confirmPassword">Confirm password</label>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-control <%= validationErrors.find(e => e.path === 'password') ? 'is-invalid' : '' %>"
+                value="<%= formData.confirmPassword %>"
+              />
+            </div>
+            <!-- END -->
+
+            <div class="mb-3">
+              <div class="d-grid gap-2">
+                <button class="btn btn-dark" type="submit">Signup</button>
+              </div>
+            </div>
+
+          </form>
+          <!-- END -->
+
+        </article>
+
+      </section>
+
+
+    </main>
+  </body>
+
+<%- include('../includes/footer') %>
