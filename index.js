@@ -8,9 +8,9 @@ const cookieParser = require('cookie-parser');
 // const csrf = require('tiny-csrf');
 const flash = require('connect-flash');
 
-const MONGODB_PASSWORD = 'KQgdqRRlkfB1Vv6P';
-const MONGODB_URI = 'mongodb://127.0.0.1:27017/ecommerce';
-// const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
+const MONGODB_PASSWORD = 'kI0ap0Ln8Gz39BAK';
+// const MONGODB_URI = 'mongodb://127.0.0.1:27017/ecommerce';
+const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
 
 const STORE = new MongoDBStore({
   uri: MONGODB_URI,
@@ -29,7 +29,7 @@ const User = require('./models/user');
 const adminRoute = require('./routes/admin');
 const shopRoute = require('./routes/shop');
 const authRouter = require('./routes/auth');
-const page404Route = require('./routes/page404');
+const { getError505, getError404 } = require('./controllers/error');
 
 // Body parse
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -54,16 +54,29 @@ app.use(session({
 app.use(flash());
 
 app.use((req, res, next) => {
+
   if( !req.session.user ) {
+    console.log('Continuando sin usuario en la session');
     return next();
   }
 
+  // console.log('Hay usuario en la session')
+  
   User.findById( req.session.user._id )
     .then((user) => {
+      if(!user) {
+        // console.log('El usuario no existe en la base de datos')
+        next();
+      }
+      // console.log('Usuario encontrado en la base de datos')
       req.user = user;
       next();
     })
-    .catch((err) => console.log(err))
+    .catch((err) => {
+      console.log(err);
+      throw new Error(err);
+    })
+
 });
 
 app.use((req, res, next) => {
@@ -79,7 +92,18 @@ app.set('view engine', 'ejs');
 app.use('/admin', adminRoute);
 app.use(shopRoute);
 app.use(authRouter);
-app.use(page404Route);
+app.use('/500', getError505);
+app.use(getError404);
+
+app.use((error, req, res, next) => {
+  res
+    .status(500)
+    .render('page500', { 
+      path: '/page500', 
+      pageTitle: 'Page500',
+      errorMessage: error.message
+    });
+})
 
 // Listen and database
 mongoose.connect(`${MONGODB_URI}`)

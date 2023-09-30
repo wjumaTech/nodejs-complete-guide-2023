@@ -12,11 +12,9 @@ exports.getAddProduct = (req, res, next) => {
   });
 }
 
-exports.postAddProduct = (req, res) => {
-
+exports.postAddProduct = (req, res, next) => {
   const { title, price, imageUrl, description } = req.body;
   const titleSlug = slugTextConverter(title);
-
   const errors = validationResult(req);
 
   if(!errors.isEmpty()) {
@@ -42,7 +40,8 @@ exports.postAddProduct = (req, res) => {
     imageUrl,
     description,
     userId: req.user
-  })
+  });
+
   product.save()
     .then((productSaved) => {
       console.log('Created product!');
@@ -52,8 +51,11 @@ exports.postAddProduct = (req, res) => {
       res.redirect('/');
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
+
 }
 
 exports.getEditProduct = (req, res, next) => {
@@ -62,8 +64,14 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect('/')
   }
   const prodId = req.params.productId;
+
   Product.findOne({ _id: prodId})
     .then((product) => {
+
+      if(!product) {
+        res.redirect('/admin/products');
+      }
+
       res.render('admin/edit-product', {
         pageTitle: 'Edit Product',
         path: '/admin/edit-product',
@@ -72,6 +80,11 @@ exports.getEditProduct = (req, res, next) => {
         product: product,
         errorMessage: null
       });
+    })
+    .catch(err => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 }
 
