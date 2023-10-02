@@ -1,9 +1,18 @@
+const path = require('path');
+const fs = require('fs');
+const PDFDocument  = require('pdfkit');
+
 const Product = require('../models/product');
 const Order = require('../models/order');
+const { response } = require('express');
+const { request } = require('http');
+
 
 exports.getProducts = (req, res, next) => {
+
   Product.find()
-    .then((products) => {
+  .then((products) => {
+      // console.log(products)
       res.render('shop/product-list', {
         path: '/products',
         pageTitle: 'Products',
@@ -135,4 +144,106 @@ exports.postOrder = async (req, res) => {
   await req.user.clearCart();
   console.log('Cache carrito borrada!.')
   res.redirect('/orders');
+}
+
+exports.getInvoiceOrders = (req=request, res=response, next) => {
+  
+  const { orderId } = req.params;
+
+  Order.findById(orderId)
+    .then((order) => {
+
+      if(!order) {
+        return next(new Error('Not order found'));
+      }
+      
+      if(order.user.userId.toString() !== req.user._id.toString() ) {
+        return next(new Error('Unauthorized'));
+      }
+
+      const invoiceName = `invoice-${orderId}.pdf`;
+      const invoicePath = path.join(__dirname, '../', 'data', 'invoice', invoiceName);
+
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', 'attachment; filename: "'+ invoiceName +'"');
+
+      // NOTE: Creating a PDFKit document
+      const doc = new PDFDocument ();
+      doc.pipe(fs.createWriteStream(invoicePath)); // write to PDF
+      doc.pipe(res); // HTTP response
+
+      // add stuff to PDF here using methods described below...
+
+      const { outline } = doc;
+      const top = outline.addItem('Top Level');
+      top.addItem('Order Confirmation')
+
+      doc.fillColor("#AA0000").fontSize("16").text('Ecommerce', {
+        lineBreak: false,
+        stroke: true
+      }).fillColor("#000").fontSize("14").text("Orden Confirmation", {
+        align: 'right',
+        lineGap: 60
+      });
+
+      doc.font("Times-Bold").fontSize("15").fillColor('red').text('Hello ' + req.user.name.toUpperCase(), {
+        lineGap: 10,
+        lineBreak: true,
+        continued: false
+      });
+
+      doc.font("Times-Roman").fillColor('#000').text('Thank you for shopping with us. Well send a confirmation when your item ships.', {
+        
+      });
+      
+      doc.text("Details", {
+        lineGap: 10
+      });
+
+      doc.text(`Order #${order._id}`);
+
+      let totalPrice;
+      order.products.forEach(prod => {
+
+        totalPrice =+ prod.quantity * prod.product.price; 
+        doc.text(`${prod.quantity} ${prod.product.title} x $${prod.product.price}`);
+
+        
+      })
+      doc.fontSize("15").font("Times-Bold").text("Total price: $" + totalPrice);
+
+      // finalize the PDF and end the stream
+      doc.end();
+      
+
+      /**
+       * No se recomiendo enviar los datos de esta forma para arcivos grandes 
+       */
+      // fs.readFile(invoicePath, (err, fileContent) => {
+      //   if(err) {
+      //     return next(err);
+      //   }
+        
+      //   // NOTE: Content-Disposition
+      //   /**
+      //    * NOTE: Content-Disposition 
+      //    * Set default database name to download file when client downloaded
+      //    */
+      //   res.setHeader('Content-Type', 'application/pdf');
+      //   // res.setHeader('Content-Disposition', 'inline; filename: "'+ invoiceName +'"'); // Open a new windows with a file content 
+      //   res.setHeader('Content-Disposition', 'attachment; filename: "'+ invoiceName +'"'); // Download the file to client file system 
+    
+      //   res.send(fileContent);
+      // });
+
+      // NOTE: Download File createReadStream
+      // const FILE = fs.createReadStream(invoicePath);
+      // res.setHeader('Content-Type', 'application/pdf');
+      // res.setHeader('Content-Disposition', 'inline; filename: "'+ invoiceName +'"');
+      // FILE.pipe(res);
+
+    })
+    .catch((err) => next(err));
+
 }

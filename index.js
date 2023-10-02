@@ -7,6 +7,8 @@
     const cookieParser = require('cookie-parser');
     // const csrf = require('tiny-csrf');
     const flash = require('connect-flash');
+    const multer = require('multer');
+    const { v4: uuidv4 } = require('uuid');
 
     const MONGODB_PASSWORD = '2tCex27Luv5RQK8T';
     const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
@@ -15,9 +17,22 @@
     const STORE = new MongoDBStore({
       uri: MONGODB_URI,
       collection: 'sessions'
-    })
-
-    // const csrfProtection = csrf("123456789iamasecret987654321look",  ["POST"]);
+    });
+    const FILE_STORAGE = multer.diskStorage({
+      destination: (req, file, callback) => {
+        callback(null, 'images');
+      },
+      filename: (req, file, callback) => {
+        callback(null, uuidv4() + '-' + file.originalname);
+      }
+    });
+    const FILE_FILTER = (req, file, callback) => {
+      if( file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg' ) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    }
 
     const app = express();
     const port = process.env.PORT || 3000;
@@ -33,11 +48,13 @@
     const { errorPage500 } = require('./controllers/error');
 
     // Body parse
-    app.use(bodyParser.urlencoded({ extended: false }))
+    app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
+    app.use(multer({ storage: FILE_STORAGE, fileFilter: FILE_FILTER }).single('image'));
 
     // Static files
-    app.use(express.static(path.join(__dirname, 'public')))
+    app.use("/public", express.static(path.join(__dirname, 'public')))
+    app.use("/images", express.static(path.join(__dirname, 'images')))
 
     // Cookie parser
     app.use(cookieParser("My secret"));
@@ -52,62 +69,33 @@
     }));
 
     app.use((req, res, next) => {
-
       if (!req.session.user) {
-        // Error handler
-        // console.log({
-      //   code: 403,
-      //   type: 'error',
-      //   msg: 'User does\'t exist in the session'
-      // });
         return next();
       }
-
       User.findById(req.session.user._id)
         .then((user) => {
-
           if (!user) {
-            // Error handler
-            // console.log({
-            //   code: 403,
-            //   type: 'error',
-            //   msg: 'User dosn\'t exist in the database'
-            // });
             throw new Error('User dosn\'t exist in the database');
           }
-
-          // console.log({
-          //   code: 302,
-          //   type: 'found',
-          //   msg: `We have found a mongo user with the ObjectId: ${user._id}, adding to the request and continuing`
-          // })
           req.user = user;
           next();
         })
         .catch((err) => {
           console.log(err);
-        })
+        });
     });
 
-    // app.use(csrfProtection)
     app.use(flash());
-
-    // Could not connect to any servers in your MongoDB
-
     app.use((req, res, next) => {
       res.locals.isAuthenticated = req.session.isLoggedIn;
       next();
     })
 
-    // Engine template
     app.set('views', path.join(__dirname, 'views'))
     app.set('view engine', 'ejs');
-
-    // Use routes
     app.use('/admin', adminRoute);
     app.use(shopRoute);
     app.use(authRouter);
-
     app.use('/500', errorPage500);
 
     app.use((req, res, next) => {
@@ -121,7 +109,7 @@
         path: '/500',
         pageTitle: 'Page 500',
         errorMessage: error.message,
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: true // FIXME: req.session.isLoggedIn  
       });
     });
 

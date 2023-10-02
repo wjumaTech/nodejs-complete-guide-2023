@@ -17,6 +17,7 @@
             <form 
               action="/admin/<%if(editing){%>edit-product<%}else{%>add-product<%}%>" 
               method="post"
+              enctype="multipart/form-data"
             >
               <!-- VALIDACION DEL FORMULARIO -->
               <% if(errorMessage) { %>
@@ -47,16 +48,15 @@
                   placeholder="1.99"
                   value="<%if(editing || hasError){%><%= product.price %><%}%>">
               </div>
-
+              
+              <!-- FILE UPLODAD -->
               <div class="mb-3">
                 <label for="imageUrl" class="form-label">Imagen</label>
                 <input
-                  type="text"
+                  type="file"
                   class="form-control"
-                  id="imageUrl"
-                  name="imageUrl"
-                  placeholder="no-image.png"
-                  value="<%if(editing || hasError){%><%=product.imageUrl%><%}%>">
+                  name="image"
+                />
               </div>
 
               <% if (editing) { %>

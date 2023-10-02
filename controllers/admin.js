@@ -15,12 +15,13 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
 
-  const { title, price, imageUrl, description } = req.body;
+  const { title, price, description } = req.body;
   const titleSlug = slugTextConverter(title);
+  const image = req.file;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.render('admin/edit-product', {
+    return res.status(422).render('admin/edit-product', {
       pageTitle: 'Add product',
       path: '/admin/add-product',
       editing: false,
@@ -28,19 +29,17 @@ exports.postAddProduct = (req, res, next) => {
       product: {
         title,
         price,
-        imageUrl,
         description
       },
       errorMessage: errors.array()[0].msg
     });
   }
-
+  
   const product = new Product({
-    // _id: new mongoose.Types.ObjectId('65181eebd41bb0abdb03f660'),
     title,
     titleSlug,
     price,
-    imageUrl,
+    imageUrl: image.path,
     description,
     userId: req.user
   });
@@ -80,8 +79,8 @@ exports.getEditProduct = (req, res, next) => {
 }
 
 exports.postEditProduct = (req, res, next) => {
-  const { title, price, imageUrl, description, productId: prodId } = req.body;
-
+  const { title, price, description, productId: prodId } = req.body;
+  const image = req.file;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -93,7 +92,6 @@ exports.postEditProduct = (req, res, next) => {
       product: {
         title,
         price,
-        imageUrl,
         description,
         _id: prodId
       },
@@ -109,7 +107,9 @@ exports.postEditProduct = (req, res, next) => {
       }
       product.title = title;
       product.price = price;
-      product.imageUrl = imageUrl;
+      if(image) {
+        product.imageUrl = image.path;  
+      }
       product.description = description;
       return product.save()
         .then(result => {
