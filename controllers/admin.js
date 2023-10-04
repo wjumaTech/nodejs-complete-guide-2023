@@ -1,9 +1,13 @@
-const { validationResult } = require('express-validator');
-const Product = require('../models/product');
-const { slugTextConverter } = require('../util/helpers');
 const mongoose = require('mongoose');
 
 const { faker } = require('@faker-js/faker');
+const { validationResult } = require('express-validator');
+
+const Product = require('../models/product');
+
+const { slugTextConverter } = require('../util/helpers');
+const unlinkFileUtil = require('../util/file.util');
+
 
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
@@ -52,7 +56,7 @@ exports.postAddProduct = (req, res, next) => {
       return productSaved;
     })
     .then((result) => {
-      res.redirect('/');
+      res.redirect('/products/1');
     })
     .catch((err) => {
       const error = new Error(err);
@@ -154,6 +158,7 @@ exports.postEditProduct = (req, res, next) => {
       product.title = title;
       product.price = price;
       if(image) {
+        unlinkFileUtil(product.imageUrl)
         product.imageUrl = image.path;  
       }
       product.description = description;
@@ -188,16 +193,18 @@ exports.getProducts = (req, res, next) => {
     });
 }
 
-exports.postDeleteProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  Product.deleteOne({ '_id': prodId, 'userId': req.user._id })
+exports.deleteProduct = (req, res, next) => {
+  const prodId = req.params.prodId;
+  Product.findById(prodId)
+    .then(product => {
+      unlinkFileUtil(product.imageUrl);
+      return Product.deleteOne({ '_id': prodId, 'userId': req.user._id })
+    })
     .then(() => {
-      console.log('DESTROYED PRODUCT');
-      res.redirect('/admin/products');
+      console.log(`DESTROYED PRODUCT WITH ID: ${prodId}`);
+      res.json({ message: 'Success!' });
     })
     .catch(err => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+      res.json({ message: 'Error trying delete product, please try again!' })
     });
 };
