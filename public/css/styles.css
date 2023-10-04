@@ -1,0 +1,29 @@
+.order__card-body--header {
+  display: flex ;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+
+.errorMessage {
+  width: 50%;
+  height: 300px;
+  font-size: 25px;
+  color: #A00;
+  font-style: oblique;
+  font-variant-position: super;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
