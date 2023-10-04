@@ -3,6 +3,8 @@ const Product = require('../models/product');
 const { slugTextConverter } = require('../util/helpers');
 const mongoose = require('mongoose');
 
+const { faker } = require('@faker-js/faker');
+
 exports.getAddProduct = (req, res, next) => {
   res.render('admin/edit-product', {
     pageTitle: 'Add product',
@@ -57,6 +59,50 @@ exports.postAddProduct = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     });
+}
+
+
+exports.getAddFakerProducts = (req, res, next) => {
+  res.render('admin/add-faker-products', {
+    path: '/admin/add-faker-products',
+    pageTitle: 'Add Faker Products',
+    errorMessage: null
+  });
+}
+
+exports.postAddFakerProducts = (req, res, next) => {
+
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render('admin/add-faker-products', {
+      pageTitle: 'Add Faker Products',
+      path: '/admin/add-faker-products',
+      errorMessage: errors.array()[0].msg
+    });
+  }
+
+  const quantity = req.body.quantity || 1;
+  
+  for( let i = 0; i <= quantity; i++ ) {
+
+    const product = new Product();
+    
+    product.title = faker.commerce.productName();
+    product.titleSlug = slugTextConverter(product.title);
+    product.price = faker.commerce.price()
+    product.imageUrl= faker.image.avatar();
+    product.description = faker.commerce.productDescription()
+    product.userId = req.user
+  
+    product.save()
+      .then(() => {})
+      .catch(err => console.log(err))
+
+  }
+  
+  res.redirect('/products');
+
 }
 
 exports.getEditProduct = (req, res, next) => {

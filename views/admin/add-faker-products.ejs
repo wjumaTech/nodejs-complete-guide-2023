@@ -1,0 +1,40 @@
+<%- include('../includes/head') %>
+
+  <%- include('../includes/navigate') %>
+
+    <main class="my-5 container">
+
+
+      <section>
+        <header>
+          <h3> <%= pageTitle %> </h3>
+        </header>
+      </section> 
+
+      <div class="row">
+        <div class="col-6 offset-3">
+
+          <form action="/admin/add-faker-products" method="post">
+            <!-- VALIDACION DEL FORMULARIO -->
+            <% if(errorMessage) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            <% } %>
+            
+            <div class="mb-3">
+              <label for="quantity">Quantity</label>
+              <input class="form-control" type="number" step="1" name="quantity">
+            </div>
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary btn-lg">Generar</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+
+    </main>
+
+  <%- include('../includes/footer') %>

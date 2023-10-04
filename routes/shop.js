@@ -9,7 +9,9 @@ router.get('/', shopController.getIndex);
 
 router.get('/products', shopController.getProducts);
 
-router.get('/products/:titleSlug', shopController.getProductDetail);
+router.get('/products/:page', shopController.getProductsPagination);
+
+router.get('/product/:titleSlug', shopController.getProductDetail);
 
 router.get('/cart', isAuth, shopController.getCart);
 

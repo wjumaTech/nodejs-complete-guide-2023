@@ -7,7 +7,7 @@
           <a class="nav-link <%= path === '/' ? 'active' : '' %>" href="/" >Shop</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= path === '/products' ? 'active' : '' %>" href="/products">Products</a>
+          <a class="nav-link <%= path === '/products' ? 'active' : '' %>" href="/products/1">Products</a>
         </li>
         <!-- PROTECTED ROUTE -->
         <% if( isAuthenticated ) { %>
@@ -23,6 +23,10 @@
           <li class="nav-item">
             <a class="nav-link <%= path === '/admin/products' ? 'active' : '' %>" href="/admin/products"
             >Admin products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= path === '/admin/add-faker-products' ? 'active' : '' %>" href="/admin/add-faker-products"
+            >Add Faker Products</a>
           </li>
         <% } %>
       </ul>

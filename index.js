@@ -10,7 +10,7 @@
     const multer = require('multer');
     const { v4: uuidv4 } = require('uuid');
 
-    const MONGODB_PASSWORD = '2tCex27Luv5RQK8T';
+    const MONGODB_PASSWORD = 'M5Z98updvhtBjbr2';
     const MONGODB_URI = `mongodb+srv://wjumatech:${MONGODB_PASSWORD}@cluster0.ky0pvrm.mongodb.net/compra_me?retryWrites=true`;
     // const MONGODB_URI = 'mongodb://127.0.0.1:27017/ecommerce';
 

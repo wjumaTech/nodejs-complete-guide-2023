@@ -17,7 +17,8 @@ exports.getProducts = (req, res, next) => {
         path: '/products',
         pageTitle: 'Products',
         products,
-
+        current: 1,
+        pages: 1 
       });
     })
     .catch((err) => {
@@ -25,6 +26,35 @@ exports.getProducts = (req, res, next) => {
       error.httpStatusCode = 500;
       return next(error);
     })
+}
+
+exports.getProductsPagination = (req, res, next) => {
+
+  const perPage = 5
+  const page = Number(req.params.page) || 1; 
+  let itemsLength = 0;
+  
+  Product.find({})
+    .countDocuments()
+    .then((count, err) => {
+      itemsLength = count;
+      return Product.find({})
+        .skip( (perPage * page) - perPage )
+        .limit(perPage)
+      })
+      .then(products => {
+        res.render('shop/product-list', {
+          path: '/products',
+          pageTitle: 'Products',
+          products,
+          current: page,
+          pages: Math.ceil(itemsLength / perPage)
+        });
+      })
+      .catch(err => {
+        return next(new Error(err))
+      })
+
 }
 
 exports.getIndex = (req, res, next) => {
@@ -89,11 +119,7 @@ exports.postCart = (req, res, next) => {
       console.log('Se ha agregado un producto al carrito de compras')
       res.redirect('/cart')
     })
-    .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    })
+    .catch((err) => console.log(err))
 }
 
 exports.postCartDeleteProduct = (req, res) => {
@@ -112,7 +138,6 @@ exports.getOrders = (req, res) => {
         path: '/orders',
         pageTitle: 'Orders',
         orders,
-
       });
     });
 }
@@ -166,7 +191,7 @@ exports.getInvoiceOrders = (req=request, res=response, next) => {
 
 
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename: "'+ invoiceName +'"');
+      res.setHeader('Content-Disposition', 'inline; filename: "'+ invoiceName +'"');
 
       // NOTE: Creating a PDFKit document
       const doc = new PDFDocument ();
@@ -203,14 +228,13 @@ exports.getInvoiceOrders = (req=request, res=response, next) => {
 
       doc.text(`Order #${order._id}`);
 
-      let totalPrice;
+      let totalPrice = 0;
+
       order.products.forEach(prod => {
+        totalPrice = totalPrice + (prod.quantity * prod.product.price); 
+        doc.text(`${prod.quantity} ${prod.product.title} x $${prod.product.price}`); 
+      });
 
-        totalPrice =+ prod.quantity * prod.product.price; 
-        doc.text(`${prod.quantity} ${prod.product.title} x $${prod.product.price}`);
-
-        
-      })
       doc.fontSize("15").font("Times-Bold").text("Total price: $" + totalPrice);
 
       // finalize the PDF and end the stream

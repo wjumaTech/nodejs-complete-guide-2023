@@ -30,6 +30,14 @@ router.post('/add-product', [
 	body('description', 'Description must be a text and leat min 5 characters').isLength({ min: 5, max: 400 }).trim(),	
 ], adminController.postAddProduct);
 
+router.get('/add-faker-products', adminController.getAddFakerProducts)
+
+router.post( '/add-faker-products', [
+	isAuth,
+	body('quantity', 'Debes ingresar una cantidad al menos minima de 1').isNumeric().notEmpty()
+], adminController.postAddFakerProducts)
+
+
 router.post('/delete-product', isAuth, adminController.postDeleteProduct);
 
 
