@@ -142,6 +142,22 @@ exports.getOrders = (req, res) => {
     });
 }
 
+exports.getCheckout = async (req, res, next) => {
+   /**
+   * In this case we use async/await becouse mongoose migrated populate
+   * to this new paradig.
+   */
+   const cartUserProducts = await req.user.populate('cart.items.productId');
+   const products = await cartUserProducts.cart.items;
+ 
+   res.render('shop/checkout', {
+     path: '/checkout',
+     pageTitle: 'Checkout',
+     products,
+ 
+   });
+}
+
 exports.postOrder = async (req, res) => {
   const user = await req.user.populate('cart.items.productId');
   const products = await user.cart.items.map(i => {

@@ -1,0 +1,90 @@
+<%- include('../includes/head') %>
+  <%- include('../includes/navigate') %>
+    <main class="checkout container">
+
+      <section class="checkout__billing--content row mt-5">
+
+        <header>
+          <h3>Billing addres</h3>
+        </header>
+
+        <form action="/chechout" method="POST" class="row"> 
+
+          <div class="col-7">
+            <div class="row mb-3">
+              <div class="col-6">
+                <label for="firstName">First name</label>
+                <input class="form-control" type="text" name="firstName">
+              </div>
+              <div class="col-6">
+                <label for="lastName">Last name</label>
+                <input class="form-control" type="text" name="lastName">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="username">Username</label>
+              <input class="form-control" type="text" name="username" placeholder="Username">
+            </div>
+            <div class="mb-3">
+              <label for="email">Username</label>
+              <input class="form-control" type="email" name="email" placeholder="you@example.com" >
+            </div>
+            <div class="mb-3">
+              <label for="username">Address</label>
+              <input class="form-control" type="text" name="street" placeholder="132 Main St.">
+            </div>
+            <div class="mb-3">
+              <label for="username">Address 2 (Optional)</label>
+              <input class="form-control" type="text" name="street" placeholder="Apartment or suit">
+            </div>
+            <div class="mb-3 row">
+              <div class="col-4">
+                <label for="country">State</label>
+                <select class="form-select" name="country">
+                  <option value="selected" selected disabled>Open this select menu</option>
+                  <option value="puerto plata">Dominican Republic</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label for="state">State</label>
+                <select class="form-select" name="state">
+                  <option value="selected" selected disabled>Open this select menu</option>
+                  <option value="puerto plata">Puerto Plata</option>
+                </select>
+              </div>
+              <div class="col-4">
+                <label for="zip_code">Zip code</label>
+                <select class="form-select" name="zip_code">
+                  <option selected disabled value="selected">Open this select menu</option>
+                  <option value="57000">57000</option>
+                </select>
+              </div>
+            </div>
+            <hr>
+            <div class="mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Shipping address is the same as my billing address
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+                <label class="form-check-label" for="flexCheckChecked">
+                  Save this information for next time
+                </label>
+              </div>
+            </div>
+            <hr>
+            
+          </div>
+          <div class="col-5 bg-light">
+            hola
+          </div>
+        </form>
+        </section>
+
+  
+    </main>
+  </body>
+<%- include('../includes/footer') %>
